@@ -37,11 +37,20 @@ function getFromClient(request, response){
     }
 }
 
+// 追加するデータ用変数
+var data = {
+    'Taro'      : '09-999-999',
+    'Hanako'    : ' 080-888-888',
+    'Sachiko'   : '070-777-777',
+    'Tchiro'    : '060-666-666'
+};
+
 function response_index(request, response){
     var msg = "これはIndexページです";
     var content = ejs.render(index_page, {
             title : "Index",
             content : msg,
+            data : data,
     });
     response.writeHead(200, { 'Content-type' : 'text/html'});
     response.write(content);
@@ -58,6 +67,7 @@ function response_other(request, response){
         // データ受信のイベント処理
         request.on('data', (data) => {
             body += data;
+            console.log('data受信:' + data);
         });
 
         // データ受信終了のイベント処理
