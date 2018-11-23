@@ -40,9 +40,15 @@ function getFromClient(request, response){
 // 追加するデータ用変数
 var data = {
     'Taro'      : '09-999-999',
-    'Hanako'    : ' 080-888-888',
-    'Sachiko'   : '070-777-777',
-    'Tchiro'    : '060-666-666'
+    'Hanako'    : '080-888-888', 
+    'Sachiko'   : '070-777-777' ,
+    'Tchiro'    : '060-666-666',
+};
+var data2 = {
+    'Taro'      : [ 'taro@yamada'   ,'09-999-999'   ,'Tokyo' ],
+    'Hanako'    : [ 'hanako@flower' ,'080-888-888'  ,'Yokohama' ],
+    'Sachiko'   : [ 'sachi@happy'   ,'070-777-777'  ,'Nagoya' ],
+    'Tchiro'    : [ 'ichi@baseball' ,'060-666-666'  ,'USA' ],
 };
 
 function response_index(request, response){
@@ -51,6 +57,7 @@ function response_index(request, response){
             title : "Index",
             content : msg,
             data : data,
+            filename : 'data_item'
     });
     response.writeHead(200, { 'Content-type' : 'text/html'});
     response.write(content);
@@ -59,40 +66,13 @@ function response_index(request, response){
 
 function response_other(request, response){
     var msg = "これはOtherページです";
-
-    // POSTアクセス時の処理
-    if(request.method == 'POST'){
-        var body = '';
-
-        // データ受信のイベント処理
-        request.on('data', (data) => {
-            body += data;
-            console.log('data受信:' + data);
-        });
-
-        // データ受信終了のイベント処理
-        request.on('end', () => {
-            var post_data = qs.parse(body);
-            msg += 'あなたは、「' + post_data.msg + '」と書きました。';
-            var content = ejs.render(other_page, {
-                title : "Other",
-                content : msg,
-            });
-            response.writeHead(200, {'Content-type' : 'text/html'});
-            response.write(content);
-            response.end();
-        });
-    
-    // GETアクセス時の処理
-    }
-    else{
-        var msg = "ページありません。";
-        var content = ejs.render(other_page, {
+    var content = ejs.render(other_page, {
             title : "Other",
             content : msg,
-        });
-        response.writeHead(200, { 'Content-Type' : 'text/html' });
-        response.write(content);
-        response.end();
-    }
+            data : data2,
+            filename : 'data_item'
+    });
+    response.writeHead(200, { 'Content-Type' : 'text/html' });
+    response.write(content);
+    response.end();
 }
